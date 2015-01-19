@@ -1,36 +1,38 @@
 <?php
 
 require('relay.php');
-	class Server{
 
-		private $ip_server;
+class Equipement{
+		private $ip_equipment;
 		private $relay;
+		private $down_time;
+		private $up_time;
 
-		function __construct($ip,$relay_number)
+		function __construct($ip,$relay_number,$up,$down)
 		{
-			$this->ip_server = $ip;
+			$this->ip_equipment = $ip;
 			$this->relay = new Relay($relay_number);
+			$this->up_time = $up;
+			$this->down_time = $down;
 		}
 
-		function up_Server()
+		function up_Equipment()
 		{
-			$this->relay->pulse(100);
-			//echo "<span>UP</span><br>";
+			$this->relay->pulse($up_time);
 		}
 
-		function down_Server()
+		function down_Equipment()
 		{
-			$this->relay->pulse(10000);
-			//echo "<span>DOWN</span><br>";
+			$this->relay->pulse($down_time);
 		}
 
-		function reload_Server()
+		function reload_Equipment()
 		{
 			try
 			{
-				$this->down_Server();
+				$this->down_Equipment();
 				wait(1000);
-				$this->up_Server();
+				$this->up_Equipment();
 				return 1;
 			}catch(Exception $e)
 			{
@@ -41,7 +43,7 @@ require('relay.php');
 		function ping()
 		{
 			$regex = "/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/";
-			if(preg_match($regex,$this->ip_server))
+			if(preg_match($regex,$this->ip_equipment))
 			{
 				$ping = exec("ping -n 4 $this->ip_server");
 				if(!(preg_match("/Received = 0/", $ping)))

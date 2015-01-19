@@ -6,16 +6,25 @@ require('functions.php');
 		function __construct($number_of_relay)
 		{
 			$this->relay_number = $number_of_relay;
+			$this->init_Relay();
+		}
+
+		function init_Relay()
+		{
+			exec("gpio mode $this->relay_number out",$res);
+			return $res;
 		}
 
 		function passive_Mode_Relay()
 		{
-			//echo "<span>Passive Relay:".$this->relay_number."</span><br>";
+			exec("gpio write $this->relay_number 1",$res);
+			return $res;
 		}
 
 		function active_Mode_Relay()
 		{
-			//echo "<span>Active Relay:".$this->relay_number."</span><br>";
+			exec("gpio write $this->relay_number 0",$res);
+			return $res;
 		}
 
 		function pulse($micro_seconds)
